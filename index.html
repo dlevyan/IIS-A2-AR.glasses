@@ -1,35 +1,162 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="A lightweight starter project for an AR captioning glasses simulation."
-    />
-    <title>AR Captioning Glasses</title>
-    <link rel="stylesheet" href="styles.css" />
-    <script src="script.js" defer></script>
-  </head>
-  <body>
-    <main class="page-shell">
-      <section class="intro" aria-labelledby="page-title">
-        <p class="eyebrow">Intelligent Interactive Systems · Assignment 2</p>
-        <h1 id="page-title">AR Captioning Glasses</h1>
-        <p class="intro__text">
-          A future interactive simulation exploring how captions could appear in
-          the user's field of view.
-        </p>
-      </section>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="An illustrated interface prototype exploring AR captioning glasses for Deaf and Hard-of-Hearing users." />
+  <title>AR Captioning Glasses · Interface Preview</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <main class="page-shell">
+    <header class="page-header">
+      <a class="wordmark" href="#glasses-preview" aria-label="AR Captioning Glasses preview">
+        <svg viewBox="0 0 40 20" aria-hidden="true"><path d="M2 5h13v10H2zM25 5h13v10H25zM15 8q5-5 10 0M0 5h2M38 5h2" /></svg>
+        <span>AR / CAPTIONS</span>
+      </a>
+      <h1 class="sr-only">AR Captioning Glasses — Stage 1 interface preview</h1>
+      <fieldset class="mode-selector">
+        <legend class="sr-only">Simulation mode preview</legend>
+        <label class="mode-option">
+          <input type="radio" name="mode" value="scripted" checked />
+          <span><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 3h14v10H8l-5 4zM6 7h8M6 10h5" /></svg>Scripted Conversation</span>
+        </label>
+        <label class="mode-option mode-option--disabled">
+          <input type="radio" name="mode" value="microphone" disabled />
+          <span><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="7" y="2" width="6" height="10" rx="3" /><path d="M4 8v2a6 6 0 0 0 12 0V8M10 16v3M7 19h6" /></svg>Live Microphone <small>Coming soon</small></span>
+        </label>
+      </fieldset>
+    </header>
 
-      <section class="status-card" aria-labelledby="status-title">
-        <p class="status-card__label">Project status</p>
-        <h2 id="status-title">Starter structure ready</h2>
-        <p>
-          The simulator will be developed in later iterations. This page is
-          currently a simple foundation for the project.
-        </p>
-      </section>
-    </main>
-  </body>
+    <figure class="glasses-preview" id="glasses-preview" aria-labelledby="glasses-caption">
+      <div class="glasses-viewport" tabindex="0" role="region" aria-label="Illustrated AR glasses. Scroll horizontally on smaller screens to see both arms.">
+        <svg class="glasses-art" viewBox="0 130 1040 340" role="img" aria-labelledby="glasses-title glasses-description">
+          <title id="glasses-title">Black AR captioning glasses with a conversation visible through the lenses</title>
+          <desc id="glasses-description">Original illustration of three people seated around one table. A bubble beside the left person's face reads: Hello everyone, how are you? Subtle markings on the right temple show, from the lens outward, caption position, hourglass navigation with plus, confirm and minus, and a round main-menu button. These illustrated controls are not interactive; enlarged buttons follow below.</desc>
+          <defs>
+            <linearGradient id="frame" x1="0" y1="0" x2="0.15" y2="1"><stop stop-color="#40434a" /><stop offset=".25" stop-color="#17191d" /><stop offset=".7" stop-color="#08090b" /><stop offset="1" stop-color="#303238" /></linearGradient>
+            <linearGradient id="temple" x1="0" y1="0" x2="0.2" y2="1"><stop stop-color="#45484e" /><stop offset=".48" stop-color="#22252a" /><stop offset="1" stop-color="#0d0f12" /></linearGradient>
+            <linearGradient id="wall" x2="0" y2="1"><stop stop-color="#e9e4d9" /><stop offset="1" stop-color="#c7bfb0" /></linearGradient>
+            <linearGradient id="lens-glint" x2="1" y2="1"><stop stop-color="#fff" stop-opacity=".17" /><stop offset=".4" stop-color="#fff" stop-opacity="0" /><stop offset="1" stop-color="#c9e4e1" stop-opacity=".12" /></linearGradient>
+            <radialGradient id="shadow"><stop stop-color="#151b26" stop-opacity=".18" /><stop offset="1" stop-color="#151b26" stop-opacity="0" /></radialGradient>
+            <clipPath id="lenses">
+              <path d="M156 211Q156 193 179 192L450 198Q471 199 472 220L464 362Q463 389 438 390L192 383Q164 382 161 356Z" />
+              <path d="M534 222Q535 201 557 201L825 190Q850 190 851 213L844 354Q842 379 816 382L562 392Q535 392 534 366Z" />
+            </clipPath>
+          </defs>
+          <ellipse cx="510" cy="437" rx="470" ry="22" fill="url(#shadow)" />
+          <!-- Temples extend outwards behind the sculpted front frame. -->
+          <path d="M147 194L65 151Q49 143 35 153L20 170Q16 176 23 182L32 186Q37 188 42 181L51 171L140 230Z" fill="url(#temple)" stroke="#15171a" stroke-width="2" />
+          <path d="M847 192L975 150Q989 146 1000 156L1021 182Q1027 190 1019 196L1013 200Q1008 203 1003 195L982 174L860 230Z" fill="url(#temple)" stroke="#111317" stroke-width="2" />
+          <path d="M865 190L976 155Q988 151 997 161L1016 185" fill="none" stroke="#6f737b" stroke-opacity=".4" stroke-width="1.5" />
+          <path d="M881 182L893 214" stroke="#0a0b0d" stroke-width="2" />
+          <!-- All three physical controls are on the visible right temple. -->
+          <g transform="translate(905 190) rotate(-18) scale(.55)">
+            <rect x="-13" y="-17" width="26" height="34" rx="8" fill="none" stroke="#858a90" />
+            <path d="M-6-9V9M0-9V9M6-9V9" stroke="#858a90" stroke-width="1.5" />
+          </g>
+          <g transform="translate(940 177) rotate(-18) scale(.44)">
+            <path d="M-12-29Q-19-29-18-19L-10 0L-18 19Q-19 29-12 29H12Q19 29 18 19L10 0L18-19Q19-29 12-29Z" fill="none" stroke="#858a90" />
+            <path d="M-5-18H5M0-23V-13M-5 20H5" stroke="#a9adb3" stroke-width="2" stroke-linecap="round" />
+            <circle r="5" fill="none" stroke="#a9adb3" />
+          </g>
+          <g transform="translate(974 165) rotate(-18) scale(.5)">
+            <circle r="19" fill="none" stroke="#858a90" stroke-width="1.5" />
+            <path d="M-6-5H6M-6 0H6M-6 5H6" stroke="#a9adb3" stroke-width="1.5" stroke-linecap="round" />
+          </g>
+
+          <!-- One room, one table, three people: a continuous first-person scene. -->
+          <g clip-path="url(#lenses)">
+            <path fill="url(#wall)" d="M140 185H866V402H140Z" />
+            <path d="M159 185H350V285H159Z" fill="#bdccc7" />
+            <path d="M164 190H344V279H164Z" fill="#e0ebe4" />
+            <path d="M251 190V279M164 234H344" stroke="#fafaf3" stroke-width="7" />
+            <path d="M165 269Q200 238 230 252T287 243T344 251V279H165Z" fill="#a2b7a0" />
+            <path d="M389 185V310M701 185V309" stroke="#bdb6a8" stroke-width="2" />
+            <rect x="735" y="207" width="70" height="53" rx="2" fill="#a08970" />
+            <path d="M741 213H799V254H741Z" fill="#eeebe1" /><path d="M748 247L767 222L790 247Z" fill="#b4c1b0" />
+            <path d="M150 330H860V400H150Z" fill="#b3aea0" />
+            <path d="M175 325Q175 310 195 310H324Q342 310 342 330V390H175ZM520 327Q520 310 538 310H646Q669 310 669 331V390H520ZM712 334Q712 315 732 315H841V390H712Z" fill="#a28d75" />
+            <path d="M458 307Q430 267 443 246Q469 262 465 307Q475 269 497 275Q494 299 465 307" fill="#71866d" /><path d="M447 306H482L477 335H453Z" fill="#b9886d" />
+            <g id="person-left">
+              <path d="M198 375L206 332Q214 319 239 317H282Q313 318 321 341L332 383Z" fill="#698273" />
+              <path d="M245 301V322Q259 338 275 322V301" fill="#ba7e5d" />
+              <ellipse cx="259" cy="281" rx="33" ry="41" fill="#c98d69" />
+              <ellipse cx="227" cy="285" rx="6" ry="10" fill="#c98d69" /><ellipse cx="291" cy="285" rx="6" ry="10" fill="#c98d69" />
+              <path d="M226 278Q217 239 250 234Q289 228 293 264L292 278L280 256Q260 269 238 258L231 281Z" fill="#302c29" />
+              <path d="M241 280h7M270 280h7" stroke="#49362e" stroke-width="2.5" stroke-linecap="round" />
+              <path d="M258 283L255 294H261" fill="none" stroke="#a36b50" stroke-width="2" />
+              <path d="M249 302Q260 311 271 300" fill="#fff7e9" stroke="#874f3c" stroke-width="1.5" />
+              <path d="M218 346L233 380M300 344L290 381" stroke="#536e60" stroke-width="3" />
+            </g>
+            <g id="person-middle">
+              <path d="M534 377L541 329Q547 314 571 310H607Q633 315 640 336L647 382Z" fill="#b47a5c" />
+              <path d="M551 280Q548 234 582 233Q622 228 626 276L632 322L609 327L570 318L548 322Z" fill="#4c3b32" />
+              <path d="M577 293V315Q589 330 603 314V293" fill="#d8aa87" />
+              <ellipse cx="589" cy="276" rx="27" ry="35" fill="#e0b493" />
+              <path d="M560 269Q554 242 578 238Q608 230 619 261Q591 258 577 248Q572 263 560 269" fill="#4c3b32" />
+              <path d="M572 276h6M599 276h6" stroke="#4c3b32" stroke-width="2" stroke-linecap="round" />
+              <path d="M586 280L583 290H589M581 298Q590 303 598 296" fill="none" stroke="#ac755e" stroke-width="1.5" stroke-linecap="round" />
+              <path d="M565 325L581 343L612 324M554 346L561 380M627 346L618 380" fill="none" stroke="#965f46" stroke-width="2" />
+            </g>
+            <g id="person-right">
+              <path d="M718 388L725 344Q732 324 756 322H796Q824 325 833 348L844 386Z" fill="#657b91" />
+              <path d="M762 304V327Q775 342 790 326V302" fill="#81533f" />
+              <ellipse cx="777" cy="284" rx="30" ry="38" fill="#95664e" />
+              <ellipse cx="747" cy="286" rx="5" ry="9" fill="#95664e" /><ellipse cx="807" cy="286" rx="5" ry="9" fill="#95664e" />
+              <path d="M747 277Q739 251 755 243Q760 230 773 237Q790 227 800 242Q815 247 807 275L800 262Q771 271 753 261Z" fill="#252828" />
+              <path d="M758 281h6M789 281h6" stroke="#292b29" stroke-width="2.5" stroke-linecap="round" />
+              <path d="M775 283L772 294H778M765 302Q776 310 788 300" fill="none" stroke="#533d32" stroke-width="2" stroke-linecap="round" />
+              <path d="M743 350L749 380M815 351L807 384" stroke="#4c647c" stroke-width="3" />
+            </g>
+            <path d="M168 373Q491 342 859 375L884 410H141Z" fill="#b49673" />
+            <path d="M168 377Q491 347 859 379" fill="none" stroke="#dcc6a5" stroke-width="3" />
+            <path d="M346 355H372L369 375H349Z" fill="#f5f0e5" /><path d="M372 358Q388 356 380 368H371" fill="none" stroke="#f5f0e5" stroke-width="4" /><path d="M680 354H702L700 374H683Z" fill="#dde5e0" />
+            <path d="M146 186H866V400H146Z" fill="url(#lens-glint)" />
+            <!-- Static caption sits beside the speaker's face, not over it. -->
+            <g id="caption-example">
+              <path d="M320 249Q320 240 329 240H450Q459 240 459 249V310Q459 319 450 319H329Q320 319 320 310V291L307 284L320 277Z" fill="#142a27" fill-opacity=".96" stroke="#d9ede1" stroke-opacity=".7" />
+              <text x="334" y="263" fill="#fff" font-family="system-ui, sans-serif" font-size="17" font-weight="500"><tspan x="334">Hello everyone,</tspan><tspan x="334" dy="23">how are you?</tspan></text>
+              <circle cx="335" cy="302" r="3" fill="#91cfac" /><text x="345" y="306" fill="#bdd6c9" font-family="system-ui, sans-serif" font-size="9" letter-spacing=".7">EXAMPLE CAPTION</text>
+            </g>
+          </g>
+          <!-- Even-odd cutouts reveal the scene through the rectangular lenses. -->
+          <path fill="url(#frame)" fill-rule="evenodd" stroke="#17191d" stroke-width="2" d="M127 188Q128 171 157 173L454 181Q480 182 489 202Q509 191 522 203Q527 185 553 184L843 172Q873 172 876 194L868 357Q864 401 822 405L560 415Q519 416 517 372L516 243Q508 222 489 243L481 367Q479 412 437 413L187 405Q145 403 142 361ZM156 211Q156 193 179 192L450 198Q471 199 472 220L464 362Q463 389 438 390L192 383Q164 382 161 356ZM534 222Q535 201 557 201L825 190Q850 190 851 213L844 354Q842 379 816 382L562 392Q535 392 534 366Z" />
+          <path d="M143 186L454 194M553 196L843 184" stroke="#72757b" stroke-opacity=".55" stroke-width="2" stroke-linecap="round" />
+          <path d="M169 362Q172 375 192 375M544 367Q545 382 564 383" fill="none" stroke="#dceae7" stroke-opacity=".4" stroke-width="2" />
+          <path d="M485 258L480 291Q479 305 487 306M520 258L525 291Q526 305 518 306" fill="none" stroke="#74777c" stroke-opacity=".7" stroke-width="6" stroke-linecap="round" />
+          <rect x="132" y="204" width="14" height="6" rx="3" fill="#777b80" /><rect x="857" y="202" width="13" height="6" rx="3" fill="#777b80" />
+        </svg>
+      </div>
+      <figcaption id="glasses-caption"><span class="preview-dot" aria-hidden="true"></span>Illustrated scene · Static caption example<span class="scroll-hint"> · Swipe or use arrow keys to explore</span></figcaption>
+    </figure>
+
+    <section class="controls-section" aria-labelledby="controls-title">
+      <div class="section-heading"><h2 id="controls-title">Glasses Controls</h2><p>Preview only · Press feedback</p></div>
+      <div class="control-grid">
+        <article class="control-card">
+          <div class="control-stage"><button class="hardware-button position-button" type="button" aria-label="Caption position — visual feedback only" data-control="position" aria-describedby="position-description"><span aria-hidden="true"><i></i><i></i><i></i></span></button></div>
+          <div class="control-copy"><h3>Caption position</h3><p id="position-description">Auto · Left · Below · Right</p></div>
+        </article>
+        <article class="control-card">
+          <div class="control-stage">
+            <div class="navigation-control" role="group" aria-label="Menu navigation preview" aria-describedby="navigation-description">
+              <svg class="navigation-body" viewBox="0 0 70 136" aria-hidden="true"><defs><linearGradient id="nav-surface" x2="1" y2="1"><stop stop-color="#42464d" /><stop offset="1" stop-color="#16181d" /></linearGradient></defs><path d="M19 2Q2 2 4 20L18 68L4 116Q2 134 19 134H51Q68 134 66 116L52 68L66 20Q68 2 51 2Z" fill="url(#nav-surface)" stroke="#5c6068" stroke-width="1.5" /></svg>
+              <button type="button" class="navigation-button" aria-label="Navigate up — visual feedback only" data-control="up"><span aria-hidden="true">+</span></button>
+              <button type="button" class="navigation-button navigation-confirm" aria-label="Confirm selection — visual feedback only" data-control="confirm"><span aria-hidden="true"></span></button>
+              <button type="button" class="navigation-button" aria-label="Navigate down — visual feedback only" data-control="down"><span aria-hidden="true">−</span></button>
+            </div>
+          </div>
+          <div class="control-copy"><h3>Menu navigation</h3><p id="navigation-description">Plus · Confirm · Minus</p></div>
+        </article>
+        <article class="control-card">
+          <div class="control-stage"><button class="hardware-button menu-button" type="button" aria-label="Main menu — visual feedback only" data-control="menu" aria-describedby="menu-description"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7H19M5 12H19M5 17H19" /></svg></button></div>
+          <div class="control-copy"><h3>Main menu</h3><p id="menu-description">Customisation</p></div>
+        </article>
+      </div>
+    </section>
+    <footer class="page-footer"><span>Intelligent Interactive Systems · Assignment 2</span><span>Original illustration · No microphone access</span></footer>
+  </main>
+</body>
 </html>
