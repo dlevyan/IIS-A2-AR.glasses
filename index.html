@@ -31,9 +31,9 @@
 
     <figure class="glasses-preview" id="glasses-preview" aria-labelledby="glasses-caption">
       <div class="glasses-viewport" tabindex="0" role="region" aria-label="Illustrated AR glasses. Scroll horizontally on smaller screens to see both arms.">
-        <svg class="glasses-art" viewBox="0 130 1040 340" role="img" aria-labelledby="glasses-title glasses-description">
+        <svg class="glasses-art" viewBox="-35 130 1110 340" role="img" aria-labelledby="glasses-title glasses-description">
           <title id="glasses-title">Black AR captioning glasses with a conversation visible through the lenses</title>
-          <desc id="glasses-description">Original illustration of three people seated around one table. A bubble beside the left person's face reads: Hello everyone, how are you? Subtle markings on the right temple show, from the lens outward, caption position, hourglass navigation with plus, confirm and minus, and a round main-menu button. These illustrated controls are not interactive; enlarged buttons follow below.</desc>
+          <desc id="glasses-description">Original illustration of three people seated around one table. A bubble beside the left person's face reads: Hello everyone, how are you? Both open temples extend gently outward. The physical controls are shown separately in the outside-right-temple illustration below.</desc>
           <defs>
             <linearGradient id="frame" x1="0" y1="0" x2="0.15" y2="1"><stop stop-color="#40434a" /><stop offset=".25" stop-color="#17191d" /><stop offset=".7" stop-color="#08090b" /><stop offset="1" stop-color="#303238" /></linearGradient>
             <linearGradient id="temple" x1="0" y1="0" x2="0.2" y2="1"><stop stop-color="#45484e" /><stop offset=".48" stop-color="#22252a" /><stop offset="1" stop-color="#0d0f12" /></linearGradient>
@@ -47,24 +47,10 @@
           </defs>
           <ellipse cx="510" cy="437" rx="470" ry="22" fill="url(#shadow)" />
           <!-- Temples extend outwards behind the sculpted front frame. -->
-          <path d="M147 194L65 151Q49 143 35 153L20 170Q16 176 23 182L32 186Q37 188 42 181L51 171L140 230Z" fill="url(#temple)" stroke="#15171a" stroke-width="2" />
-          <path d="M847 192L975 150Q989 146 1000 156L1021 182Q1027 190 1019 196L1013 200Q1008 203 1003 195L982 174L860 230Z" fill="url(#temple)" stroke="#111317" stroke-width="2" />
-          <path d="M865 190L976 155Q988 151 997 161L1016 185" fill="none" stroke="#6f737b" stroke-opacity=".4" stroke-width="1.5" />
-          <path d="M881 182L893 214" stroke="#0a0b0d" stroke-width="2" />
-          <!-- All three physical controls are on the visible right temple. -->
-          <g transform="translate(905 190) rotate(-18) scale(.55)">
-            <rect x="-13" y="-17" width="26" height="34" rx="8" fill="none" stroke="#858a90" />
-            <path d="M-6-9V9M0-9V9M6-9V9" stroke="#858a90" stroke-width="1.5" />
-          </g>
-          <g transform="translate(940 177) rotate(-18) scale(.44)">
-            <path d="M-12-29Q-19-29-18-19L-10 0L-18 19Q-19 29-12 29H12Q19 29 18 19L10 0L18-19Q19-29 12-29Z" fill="none" stroke="#858a90" />
-            <path d="M-5-18H5M0-23V-13M-5 20H5" stroke="#a9adb3" stroke-width="2" stroke-linecap="round" />
-            <circle r="5" fill="none" stroke="#a9adb3" />
-          </g>
-          <g transform="translate(974 165) rotate(-18) scale(.5)">
-            <circle r="19" fill="none" stroke="#858a90" stroke-width="1.5" />
-            <path d="M-6-5H6M-6 0H6M-6 5H6" stroke="#a9adb3" stroke-width="1.5" stroke-linecap="round" />
-          </g>
+          <path d="M147 194L48 177Q15 172-5 179Q-17 183-12 193Q-8 202 3 200L44 197L141 230Z" fill="url(#temple)" stroke="#15171a" stroke-width="2" />
+          <path d="M847 192L991 171Q1021 168 1041 181Q1053 189 1046 198Q1041 205 1033 200L1000 189L860 230Z" fill="url(#temple)" stroke="#111317" stroke-width="2" />
+          <path d="M139 198L47 181Q14 176-4 183M865 193L992 176Q1020 173 1040 186" fill="none" stroke="#6f737b" stroke-opacity=".4" stroke-width="1.5" />
+          <path d="M881 187L887 216" stroke="#0a0b0d" stroke-width="2" />
 
           <!-- One room, one table, three people: a continuous first-person scene. -->
           <g clip-path="url(#lenses)">
@@ -134,26 +120,60 @@
 
     <section class="controls-section" aria-labelledby="controls-title">
       <div class="section-heading"><h2 id="controls-title">Glasses Controls</h2><p>Preview only · Press feedback</p></div>
+      <div class="controls-layout">
+      <figure class="temple-inset">
+        <figcaption>Outside of right temple</figcaption>
+        <svg class="temple-side-art" viewBox="0 0 440 145" role="img" aria-labelledby="temple-title temple-description">
+          <title id="temple-title">Outside of right temple</title>
+          <desc id="temple-description">Side view of the outward-facing surface, with controls arranged from the front hinge toward the ear: ridged caption-position button, vertical hourglass navigation with plus above a circular confirmation button and minus below, then a large circular menu button. These controls sit on the outside, away from the wearer's head.</desc>
+          <defs>
+            <!-- Shared artwork keeps the physical and enlarged controls identical. -->
+            <linearGradient id="button-surface" x2="1" y2="1"><stop stop-color="#41454c" /><stop offset="1" stop-color="#181a1f" /></linearGradient>
+            <linearGradient id="confirm-surface" x2="1" y2="1"><stop stop-color="#9aa0a9" /><stop offset="1" stop-color="#535963" /></linearGradient>
+            <symbol id="position-shape" viewBox="0 0 44 54">
+              <rect x=".5" y=".5" width="43" height="53" rx="11" fill="url(#button-surface)" stroke="#535860" />
+              <path d="M15 17V37M22 17V37M29 17V37" stroke="#8a9099" stroke-width="2" stroke-linecap="round" />
+            </symbol>
+            <symbol id="navigation-shape" viewBox="0 0 70 136"><path d="M19 2Q2 2 4 20L18 68L4 116Q2 134 19 134H51Q68 134 66 116L52 68L66 20Q68 2 51 2Z" fill="url(#button-surface)" stroke="#5c6068" stroke-width="1.5" /></symbol>
+            <symbol id="plus-mark" viewBox="0 0 24 24"><path d="M6 12H18M12 6V18" fill="none" stroke="#f5f7f6" stroke-width="2" stroke-linecap="round" /></symbol>
+            <symbol id="minus-mark" viewBox="0 0 24 24"><path d="M6 12H18" stroke="#f5f7f6" stroke-width="2" stroke-linecap="round" /></symbol>
+            <symbol id="confirm-mark" viewBox="0 0 14 14"><circle cx="7" cy="7" r="6.5" fill="url(#confirm-surface)" stroke="#b6bbc1" /></symbol>
+            <symbol id="menu-shape" viewBox="0 0 54 54"><circle cx="27" cy="27" r="26.5" fill="url(#button-surface)" stroke="#535860" /><path d="M21 22H33M21 27H33M21 32H33" stroke="#dce1e3" stroke-width="1.5" stroke-linecap="round" /></symbol>
+          </defs>
+          <!-- Exterior side elevation: front hinge on left, curved earpiece on right. -->
+          <path d="M15 29H283Q339 29 369 49L426 91Q436 99 429 110L423 118Q418 124 411 118L356 83Q326 66 283 94H15Z" fill="url(#temple)" stroke="#17191d" stroke-width="2" />
+          <path d="M24 34H283Q337 34 366 54L423 96" fill="none" stroke="#6f737b" stroke-opacity=".5" stroke-width="1.5" />
+          <path d="M31 31V92" stroke="#0d0f12" stroke-width="2" />
+          <circle cx="23" cy="44" r="2" fill="#858a90" /><circle cx="23" cy="78" r="2" fill="#858a90" />
+          <use href="#position-shape" x="64" y="48.5" width="22" height="27" />
+          <use href="#navigation-shape" x="126" y="35" width="28" height="54" />
+          <use href="#plus-mark" x="134" y="38" width="12" height="12" />
+          <use href="#confirm-mark" x="136.5" y="58.5" width="7" height="7" />
+          <use href="#minus-mark" x="134" y="74" width="12" height="12" />
+          <use href="#menu-shape" x="191" y="48.5" width="27" height="27" />
+        </svg>
+      </figure>
       <div class="control-grid">
         <article class="control-card">
-          <div class="control-stage"><button class="hardware-button position-button" type="button" aria-label="Caption position — visual feedback only" data-control="position" aria-describedby="position-description"><span aria-hidden="true"><i></i><i></i><i></i></span></button></div>
+          <div class="control-stage"><button class="hardware-button position-button" type="button" aria-label="Caption position — visual feedback only" data-control="position" aria-describedby="position-description"><svg viewBox="0 0 44 54" aria-hidden="true"><use href="#position-shape" /></svg></button></div>
           <div class="control-copy"><h3>Caption position</h3><p id="position-description">Auto · Left · Below · Right</p></div>
         </article>
         <article class="control-card">
           <div class="control-stage">
             <div class="navigation-control" role="group" aria-label="Menu navigation preview" aria-describedby="navigation-description">
-              <svg class="navigation-body" viewBox="0 0 70 136" aria-hidden="true"><defs><linearGradient id="nav-surface" x2="1" y2="1"><stop stop-color="#42464d" /><stop offset="1" stop-color="#16181d" /></linearGradient></defs><path d="M19 2Q2 2 4 20L18 68L4 116Q2 134 19 134H51Q68 134 66 116L52 68L66 20Q68 2 51 2Z" fill="url(#nav-surface)" stroke="#5c6068" stroke-width="1.5" /></svg>
-              <button type="button" class="navigation-button" aria-label="Navigate up — visual feedback only" data-control="up"><span aria-hidden="true">+</span></button>
-              <button type="button" class="navigation-button navigation-confirm" aria-label="Confirm selection — visual feedback only" data-control="confirm"><span aria-hidden="true"></span></button>
-              <button type="button" class="navigation-button" aria-label="Navigate down — visual feedback only" data-control="down"><span aria-hidden="true">−</span></button>
+              <svg class="navigation-body" viewBox="0 0 70 136" aria-hidden="true"><use href="#navigation-shape" /></svg>
+              <button type="button" class="navigation-button" aria-label="Navigate up — visual feedback only" data-control="up"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#plus-mark" /></svg></button>
+              <button type="button" class="navigation-button navigation-confirm" aria-label="Confirm selection — visual feedback only" data-control="confirm"><svg viewBox="0 0 14 14" aria-hidden="true"><use href="#confirm-mark" /></svg></button>
+              <button type="button" class="navigation-button" aria-label="Navigate down — visual feedback only" data-control="down"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#minus-mark" /></svg></button>
             </div>
           </div>
           <div class="control-copy"><h3>Menu navigation</h3><p id="navigation-description">Plus · Confirm · Minus</p></div>
         </article>
         <article class="control-card">
-          <div class="control-stage"><button class="hardware-button menu-button" type="button" aria-label="Main menu — visual feedback only" data-control="menu" aria-describedby="menu-description"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7H19M5 12H19M5 17H19" /></svg></button></div>
+          <div class="control-stage"><button class="hardware-button menu-button" type="button" aria-label="Main menu — visual feedback only" data-control="menu" aria-describedby="menu-description"><svg viewBox="0 0 54 54" aria-hidden="true"><use href="#menu-shape" /></svg></button></div>
           <div class="control-copy"><h3>Main menu</h3><p id="menu-description">Customisation</p></div>
         </article>
+      </div>
       </div>
     </section>
     <footer class="page-footer"><span>Intelligent Interactive Systems · Assignment 2</span><span>Original illustration · No microphone access</span></footer>
