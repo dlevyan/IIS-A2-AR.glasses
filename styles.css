@@ -49,6 +49,17 @@ figcaption { display: flex; flex-wrap: wrap; justify-content: center; align-item
 .preview-dot { width: 5px; height: 5px; border-radius: 50%; background: #53866a; }
 .scroll-hint { display: none; }
 
+/* Playback remains secondary; captions use the same SVG coordinate system. */
+.playback-strip { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px; padding: 7px 0 2px; font-size: 10px; color: var(--muted); }
+.playback-strip button { min-height: 32px; min-width: 54px; padding: 5px 10px; border: 1px solid #ccd7ce; border-radius: 6px; background: #fff; color: var(--accent); font-size: 11px; }
+.playback-strip button:hover:not(:disabled) { background: #eaf1e9; }
+.playback-strip button:active:not(:disabled) { background: #dce8dc; transform: translateY(1px); }
+.playback-strip button:disabled { opacity: .5; cursor: default; }
+#playback-time { font-variant-numeric: tabular-nums; }
+#speaker-status { min-width: 150px; }
+#dynamic-caption { pointer-events: none; }
+.script-notice { margin: 4px 0; text-align: center; font-size: 11px; }
+
 /* Compact control strip: no cards, with short labels beside each control. */
 .controls-section { width: min(1120px, 100%); justify-self: center; padding-top: 10px; border-top: 1px solid var(--line); }
 .controls-layout { display: grid; grid-template-columns: 280px minmax(0, 1fr); align-items: center; gap: 20px; }

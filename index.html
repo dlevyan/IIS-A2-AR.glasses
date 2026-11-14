@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="An illustrated interface prototype exploring AR captioning glasses for Deaf and Hard-of-Hearing users." />
-  <title>AR Captioning Glasses · Interface Preview</title>
+  <title>AR Captioning Glasses · Scripted Conversation</title>
   <link rel="stylesheet" href="styles.css" />
   <script src="script.js" defer></script>
 </head>
@@ -15,7 +15,7 @@
         <svg viewBox="0 0 40 20" aria-hidden="true"><path d="M2 5h13v10H2zM25 5h13v10H25zM15 8q5-5 10 0M0 5h2M38 5h2" /></svg>
         <span>AR / CAPTIONS</span>
       </a>
-      <h1 class="sr-only">AR Captioning Glasses — Stage 1 interface preview</h1>
+      <h1 class="sr-only">AR Captioning Glasses — Scripted conversation simulator</h1>
       <fieldset class="mode-selector">
         <legend class="sr-only">Simulation mode preview</legend>
         <label class="mode-option">
@@ -33,7 +33,7 @@
       <div class="glasses-viewport" tabindex="0" role="region" aria-label="Illustrated AR glasses. Scroll horizontally on smaller screens to see both arms.">
         <svg class="glasses-art" viewBox="-35 130 1110 340" role="img" aria-labelledby="glasses-title glasses-description">
           <title id="glasses-title">Black AR captioning glasses with a conversation visible through the lenses</title>
-          <desc id="glasses-description">Original illustration of three people seated around one table. A bubble beside the left person's face reads: Hello everyone, how are you? Both open temples extend gently outward. The physical controls are shown separately in the outside-right-temple illustration below.</desc>
+          <desc id="glasses-description">Three illustrated people around a café table: Alex on the left, Maya in the middle and Sam on the right. An empty wooden chair beside Alex is visible in the left lens. Maya later moves into that chair. Speech bubbles follow the scripted speaker and reveal words progressively. Speaker identification and movement are prepared, not detected from audio or video. Physical controls are illustrated separately below.</desc>
           <defs>
             <linearGradient id="frame" x1="0" y1="0" x2="0.15" y2="1"><stop stop-color="#40434a" /><stop offset=".25" stop-color="#17191d" /><stop offset=".7" stop-color="#08090b" /><stop offset="1" stop-color="#303238" /></linearGradient>
             <linearGradient id="temple" x1="0" y1="0" x2="0.2" y2="1"><stop stop-color="#45484e" /><stop offset=".48" stop-color="#22252a" /><stop offset="1" stop-color="#0d0f12" /></linearGradient>
@@ -63,12 +63,15 @@
             <rect x="735" y="207" width="70" height="53" rx="2" fill="#a08970" />
             <path d="M741 213H799V254H741Z" fill="#eeebe1" /><path d="M748 247L767 222L790 247Z" fill="#b4c1b0" />
             <path d="M150 330H860V400H150Z" fill="#b3aea0" />
-            <path d="M175 325Q175 310 195 310H324Q342 310 342 330V390H175ZM520 327Q520 310 538 310H646Q669 310 669 331V390H520ZM712 334Q712 315 732 315H841V390H712Z" fill="#a28d75" />
+            <path d="M175 330Q175 310 195 310H430Q451 310 451 330V390H175ZM520 327Q520 310 538 310H646Q669 310 669 331V390H520ZM712 334Q712 315 732 315H841V390H712Z" fill="#a28d75" />
+            <!-- Destination seat: its centre is read by the scripted movement. -->
+           <!-- Maya's destination on the shared bench beside Alex. -->       
+            <g id="shared-seat" data-seat-x="390" data-seat-y="276"></g>
             <path d="M458 307Q430 267 443 246Q469 262 465 307Q475 269 497 275Q494 299 465 307" fill="#71866d" /><path d="M447 306H482L477 335H453Z" fill="#b9886d" />
             <g id="person-left">
               <path d="M198 375L206 332Q214 319 239 317H282Q313 318 321 341L332 383Z" fill="#698273" />
               <path d="M245 301V322Q259 338 275 322V301" fill="#ba7e5d" />
-              <ellipse cx="259" cy="281" rx="33" ry="41" fill="#c98d69" />
+              <ellipse data-face cx="259" cy="281" rx="33" ry="41" fill="#c98d69" />
               <ellipse cx="227" cy="285" rx="6" ry="10" fill="#c98d69" /><ellipse cx="291" cy="285" rx="6" ry="10" fill="#c98d69" />
               <path d="M226 278Q217 239 250 234Q289 228 293 264L292 278L280 256Q260 269 238 258L231 281Z" fill="#302c29" />
               <path d="M241 280h7M270 280h7" stroke="#49362e" stroke-width="2.5" stroke-linecap="round" />
@@ -80,7 +83,7 @@
               <path d="M534 377L541 329Q547 314 571 310H607Q633 315 640 336L647 382Z" fill="#b47a5c" />
               <path d="M551 280Q548 234 582 233Q622 228 626 276L632 322L609 327L570 318L548 322Z" fill="#4c3b32" />
               <path d="M577 293V315Q589 330 603 314V293" fill="#d8aa87" />
-              <ellipse cx="589" cy="276" rx="27" ry="35" fill="#e0b493" />
+              <ellipse data-face cx="589" cy="276" rx="27" ry="35" fill="#e0b493" />
               <path d="M560 269Q554 242 578 238Q608 230 619 261Q591 258 577 248Q572 263 560 269" fill="#4c3b32" />
               <path d="M572 276h6M599 276h6" stroke="#4c3b32" stroke-width="2" stroke-linecap="round" />
               <path d="M586 280L583 290H589M581 298Q590 303 598 296" fill="none" stroke="#ac755e" stroke-width="1.5" stroke-linecap="round" />
@@ -89,7 +92,7 @@
             <g id="person-right">
               <path d="M718 388L725 344Q732 324 756 322H796Q824 325 833 348L844 386Z" fill="#657b91" />
               <path d="M762 304V327Q775 342 790 326V302" fill="#81533f" />
-              <ellipse cx="777" cy="284" rx="30" ry="38" fill="#95664e" />
+              <ellipse data-face cx="777" cy="284" rx="30" ry="38" fill="#95664e" />
               <ellipse cx="747" cy="286" rx="5" ry="9" fill="#95664e" /><ellipse cx="807" cy="286" rx="5" ry="9" fill="#95664e" />
               <path d="M747 277Q739 251 755 243Q760 230 773 237Q790 227 800 242Q815 247 807 275L800 262Q771 271 753 261Z" fill="#252828" />
               <path d="M758 281h6M789 281h6" stroke="#292b29" stroke-width="2.5" stroke-linecap="round" />
@@ -100,11 +103,11 @@
             <path d="M168 377Q491 347 859 379" fill="none" stroke="#dcc6a5" stroke-width="3" />
             <path d="M346 355H372L369 375H349Z" fill="#f5f0e5" /><path d="M372 358Q388 356 380 368H371" fill="none" stroke="#f5f0e5" stroke-width="4" /><path d="M680 354H702L700 374H683Z" fill="#dde5e0" />
             <path d="M146 186H866V400H146Z" fill="url(#lens-glint)" />
-            <!-- Static caption sits beside the speaker's face, not over it. -->
-            <g id="caption-example">
-              <path d="M320 249Q320 240 329 240H450Q459 240 459 249V310Q459 319 450 319H329Q320 319 320 310V291L307 284L320 277Z" fill="#142a27" fill-opacity=".96" stroke="#d9ede1" stroke-opacity=".7" />
-              <text x="334" y="263" fill="#fff" font-family="system-ui, sans-serif" font-size="17" font-weight="500"><tspan x="334">Hello everyone,</tspan><tspan x="334" dy="23">how are you?</tspan></text>
-              <circle cx="335" cy="302" r="3" fill="#91cfac" /><text x="345" y="306" fill="#bdd6c9" font-family="system-ui, sans-serif" font-size="9" letter-spacing=".7">EXAMPLE CAPTION</text>
+            <!-- One reusable caption; JavaScript supplies text and SVG position. -->
+            <g id="dynamic-caption" visibility="hidden" aria-hidden="true">
+              <path id="caption-background" fill="#142a27" fill-opacity=".96" stroke="#d9ede1" stroke-opacity=".7" stroke-linejoin="round" />
+              <text id="caption-speaker" x="11" y="12" fill="#bdd6c9" font-size="9" letter-spacing=".5"></text>
+              <text id="caption-text" x="11" y="27" fill="#fff" font-size="15" font-weight="500"></text>
             </g>
           </g>
           <!-- Even-odd cutouts reveal the scene through the rectangular lenses. -->
@@ -115,7 +118,17 @@
           <rect x="132" y="204" width="14" height="6" rx="3" fill="#777b80" /><rect x="857" y="202" width="13" height="6" rx="3" fill="#777b80" />
         </svg>
       </div>
-      <figcaption id="glasses-caption"><span class="preview-dot" aria-hidden="true"></span>Illustrated scene · Static caption example<span class="scroll-hint"> · Swipe or use arrow keys to explore</span></figcaption>
+      <figcaption id="glasses-caption"><span class="preview-dot" aria-hidden="true"></span>Simulated conversation · Scripted speakers &amp; movement<span class="scroll-hint"> · Swipe or use arrow keys to explore</span></figcaption>
+      <div class="playback-strip" role="group" aria-label="Scripted conversation playback">
+        <button id="play-button" type="button">Play</button>
+        <button id="pause-button" type="button" disabled>Pause</button>
+        <button id="replay-button" type="button" disabled>Replay</button>
+        <span id="playback-state">Ready</span>
+        <span id="playback-time" aria-label="Playback time">00:00 / 00:55</span>
+        <span id="speaker-status" role="status">No active speaker</span>
+      </div>
+      <p id="caption-announcement" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p>
+      <noscript><p class="script-notice">Enable JavaScript to play the scripted conversation.</p></noscript>
     </figure>
 
     <section class="controls-section" aria-labelledby="controls-title">
