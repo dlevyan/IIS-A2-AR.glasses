@@ -33,7 +33,7 @@
       <div class="glasses-viewport" tabindex="0" role="region" aria-label="Illustrated AR glasses. Scroll horizontally on smaller screens to see both arms.">
         <svg class="glasses-art" viewBox="-35 130 1110 340" role="img" aria-labelledby="glasses-title glasses-description">
           <title id="glasses-title">Black AR captioning glasses with a conversation visible through the lenses</title>
-          <desc id="glasses-description">Three illustrated people around a café table: Alex on the left, Maya in the middle and Sam on the right. An empty wooden chair beside Alex is visible in the left lens. Maya later moves into that chair. Speech bubbles follow the scripted speaker and reveal words progressively. Speaker identification and movement are prepared, not detected from audio or video. Physical controls are illustrated separately below.</desc>
+          <desc id="glasses-description">Three illustrated people around a café table: Alex on the left, Maya in the middle and Sam on the right. There is space beside Alex on the shared bench, where Maya later moves. Speech bubbles follow the scripted speaker and reveal words progressively. The caption-position button selects a preferred direction; unsafe placements use a visible fallback. Speaker identification and movement are prepared, not detected from audio or video. Physical controls are illustrated separately below.</desc>
           <defs>
             <linearGradient id="frame" x1="0" y1="0" x2="0.15" y2="1"><stop stop-color="#40434a" /><stop offset=".25" stop-color="#17191d" /><stop offset=".7" stop-color="#08090b" /><stop offset="1" stop-color="#303238" /></linearGradient>
             <linearGradient id="temple" x1="0" y1="0" x2="0.2" y2="1"><stop stop-color="#45484e" /><stop offset=".48" stop-color="#22252a" /><stop offset="1" stop-color="#0d0f12" /></linearGradient>
@@ -44,6 +44,7 @@
               <path d="M156 211Q156 193 179 192L450 198Q471 199 472 220L464 362Q463 389 438 390L192 383Q164 382 161 356Z" />
               <path d="M534 222Q535 201 557 201L825 190Q850 190 851 213L844 354Q842 379 816 382L562 392Q535 392 534 366Z" />
             </clipPath>
+            <clipPath id="right-lens-clip"><path d="M534 222Q535 201 557 201L825 190Q850 190 851 213L844 354Q842 379 816 382L562 392Q535 392 534 366Z" /></clipPath>
           </defs>
           <ellipse cx="510" cy="437" rx="470" ry="22" fill="url(#shadow)" />
           <!-- Temples extend outwards behind the sculpted front frame. -->
@@ -109,6 +110,13 @@
               <text id="caption-speaker" x="11" y="12" fill="#bdd6c9" font-size="9" letter-spacing=".5"></text>
               <text id="caption-text" x="11" y="27" fill="#fff" font-size="15" font-weight="500"></text>
             </g>
+            <g id="settings-menu" clip-path="url(#right-lens-clip)" visibility="hidden" role="menu" aria-label="AR glasses settings" tabindex="-1"></g>
+            <!-- Brief feedback in the clear strip above the faces, inside a lens. -->
+            <g id="position-toast" visibility="hidden" aria-hidden="true" pointer-events="none">
+              <rect x="562" y="208" width="256" height="23" rx="5" fill="#142a27" fill-opacity=".94" />
+              <text id="position-toast-title" x="690" y="223" text-anchor="middle" fill="#fff" font-size="10"></text>
+              <text id="position-toast-detail" x="690" y="228" text-anchor="middle" fill="#d5e8dc" font-size="8.5"></text>
+            </g>
           </g>
           <!-- Even-odd cutouts reveal the scene through the rectangular lenses. -->
           <path fill="url(#frame)" fill-rule="evenodd" stroke="#17191d" stroke-width="2" d="M127 188Q128 171 157 173L454 181Q480 182 489 202Q509 191 522 203Q527 185 553 184L843 172Q873 172 876 194L868 357Q864 401 822 405L560 415Q519 416 517 372L516 243Q508 222 489 243L481 367Q479 412 437 413L187 405Q145 403 142 361ZM156 211Q156 193 179 192L450 198Q471 199 472 220L464 362Q463 389 438 390L192 383Q164 382 161 356ZM534 222Q535 201 557 201L825 190Q850 190 851 213L844 354Q842 379 816 382L562 392Q535 392 534 366Z" />
@@ -123,16 +131,20 @@
         <button id="play-button" type="button">Play</button>
         <button id="pause-button" type="button" disabled>Pause</button>
         <button id="replay-button" type="button" disabled>Replay</button>
+        <button id="reset-button" type="button">
+  Reset to Original
+</button>
         <span id="playback-state">Ready</span>
         <span id="playback-time" aria-label="Playback time">00:00 / 00:55</span>
         <span id="speaker-status" role="status">No active speaker</span>
       </div>
       <p id="caption-announcement" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p>
+      <p id="position-status" class="sr-only" role="status" aria-live="polite" aria-atomic="true">Caption position: Automatic</p>
       <noscript><p class="script-notice">Enable JavaScript to play the scripted conversation.</p></noscript>
     </figure>
 
     <section class="controls-section" aria-labelledby="controls-title">
-      <div class="section-heading"><h2 id="controls-title">Glasses Controls</h2><p>Preview only · Press feedback</p></div>
+      <div class="section-heading"><h2 id="controls-title">Glasses Controls</h2><p>+ / − Navigate · Centre Select · Round button Settings</p></div>
       <div class="controls-layout">
       <figure class="temple-inset">
         <figcaption>Outside of right temple</figcaption>
@@ -168,23 +180,23 @@
       </figure>
       <div class="control-grid">
         <article class="control-card">
-          <div class="control-stage"><button class="hardware-button position-button" type="button" aria-label="Caption position — visual feedback only" data-control="position" aria-describedby="position-description"><svg viewBox="0 0 44 54" aria-hidden="true"><use href="#position-shape" /></svg></button></div>
-          <div class="control-copy"><h3>Caption position</h3><p id="position-description">Auto · Left · Below · Right</p></div>
+          <div class="control-stage"><button class="hardware-button position-button" type="button" aria-label="Caption position: Automatic. Activate to select Left." data-control="position" aria-describedby="position-description"><svg viewBox="0 0 44 54" aria-hidden="true"><use href="#position-shape" /></svg></button></div>
+          <div class="control-copy"><h3>Caption position</h3><p id="position-description">Current: Automatic</p></div>
         </article>
         <article class="control-card">
           <div class="control-stage">
-            <div class="navigation-control" role="group" aria-label="Menu navigation preview" aria-describedby="navigation-description">
+            <div class="navigation-control" role="group" aria-label="Settings menu navigation" aria-describedby="navigation-description">
               <svg class="navigation-body" viewBox="0 0 70 136" aria-hidden="true"><use href="#navigation-shape" /></svg>
-              <button type="button" class="navigation-button" aria-label="Navigate up — visual feedback only" data-control="up"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#plus-mark" /></svg></button>
-              <button type="button" class="navigation-button navigation-confirm" aria-label="Confirm selection — visual feedback only" data-control="confirm"><svg viewBox="0 0 14 14" aria-hidden="true"><use href="#confirm-mark" /></svg></button>
-              <button type="button" class="navigation-button" aria-label="Navigate down — visual feedback only" data-control="down"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#minus-mark" /></svg></button>
+              <button type="button" class="navigation-button" aria-label="Settings: move selection up" data-control="up"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#plus-mark" /></svg></button>
+              <button type="button" class="navigation-button navigation-confirm" aria-label="Settings: confirm selection" data-control="confirm"><svg viewBox="0 0 14 14" aria-hidden="true"><use href="#confirm-mark" /></svg></button>
+              <button type="button" class="navigation-button" aria-label="Settings: move selection down" data-control="down"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#minus-mark" /></svg></button>
             </div>
           </div>
-          <div class="control-copy"><h3>Menu navigation</h3><p id="navigation-description">Plus · Confirm · Minus</p></div>
+          <div class="control-copy"><h3>Menu navigation</h3><p id="navigation-description">↑ / ↓ Navigate · Enter Select</p></div>
         </article>
         <article class="control-card">
-          <div class="control-stage"><button class="hardware-button menu-button" type="button" aria-label="Main menu — visual feedback only" data-control="menu" aria-describedby="menu-description"><svg viewBox="0 0 54 54" aria-hidden="true"><use href="#menu-shape" /></svg></button></div>
-          <div class="control-copy"><h3>Main menu</h3><p id="menu-description">Customisation</p></div>
+          <div class="control-stage"><button class="hardware-button menu-button" type="button" aria-label="Open settings menu" aria-expanded="false" aria-controls="settings-menu" data-control="menu" aria-describedby="menu-description"><svg viewBox="0 0 54 54" aria-hidden="true"><use href="#menu-shape" /></svg></button></div>
+          <div class="control-copy"><h3>Main menu</h3><p id="menu-description">Open / Close · Esc Back</p></div>
         </article>
       </div>
       </div>

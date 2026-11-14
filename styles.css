@@ -58,6 +58,7 @@ figcaption { display: flex; flex-wrap: wrap; justify-content: center; align-item
 #playback-time { font-variant-numeric: tabular-nums; }
 #speaker-status { min-width: 150px; }
 #dynamic-caption { pointer-events: none; }
+#settings-menu:focus { outline: none; } /* The selected row provides visible focus. */
 .script-notice { margin: 4px 0; text-align: center; font-size: 11px; }
 
 /* Compact control strip: no cards, with short labels beside each control. */
