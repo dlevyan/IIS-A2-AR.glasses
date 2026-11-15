@@ -17,6 +17,8 @@ Available customisation:
 
 Speech bubbles still reveal words progressively and roll the latest two lines. Changing size recomputes wrapping and bubble dimensions. Incompatible colours/backgrounds are adjusted with feedback.
 
+Subtle three-shape mouth movements identify the speaking character using the same prepared dialogue clock. Pause freezes the current shape; silent gaps, completion and Reset to Original close all mouths. Reduced-motion preferences disable continuous mouth animation. This is timing-based visual simulation, not audio-driven lip synchronisation.
+
 **Simulated:** dialogue, speaker identity and Maya's movement are prepared data, not audio/video detection. **Implemented:** face/lens/menu-aware placement, progressive reveal, customisation, playback and browser preference storage. Microphone transcription remains unavailable.
 
 ## Technology stack
@@ -48,6 +50,7 @@ The right-lens menu occupies space, so automatic placement may move a bubble bel
 - **13 November 2026 — Stage 2:** scripted conversation, speaker movement, speech bubbles and progressive rolling text.
 - **14 November 2026 — Stage 3A:** temporary quick-position preferences, safe fallback and accessible feedback.
 - **14 November 2026 — Stage 3B:** added the clipped menu, live previews, separate temporary/saved preferences, contrast adjustment, size-aware wrapping and head-fixed mode. Browser checks covered all categories through physical controls, keyboard navigation, preview cancellation, Replay, reload persistence, captions-off movement and storage failure/invalid-data handling. A geometry/text audit passed 576 caption combinations and 47 menu screens. Reviewed a rendered screenshot and checked desktop viewport fit. Test-created saved preferences were cleared afterward.
+- **14 November 2026 — Mouth animation:** isolated the existing SVG mouths and added clock-driven speech shapes without changing character movement or caption logic. Controlled-clock browser checks covered all speakers, silent movement, pause/resume, Replay, Reset, reduced-motion playback, settings and reload persistence. A 52-sample timeline audit found no inactive-speaker animation or mouth/caption geometry failures; reviewed rendered faces before and after Maya moved. Desktop layout fit at 1262 × 710. Test preferences were removed afterward.
 
 Timing checks used a controlled browser clock rather than a complete real-time manual playthrough. Other browsers, physical devices, screen readers and DHH user evaluation remain untested. Short/narrow screens may need scrolling; localStorage availability can differ between browsers, particularly for local files.
 

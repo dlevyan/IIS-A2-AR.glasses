@@ -69,6 +69,42 @@ const sizePresets = {
   large: { fontSize: 17, width: 220, height: 52, lineHeight: 18, baseline: 28, tail: 4 },
 };
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+// Simulated speech shapes, not phonemes or speech recognition. Each path stays
+// inside its original character group, so Maya's existing translation carries it.
+const mouthShapes = {
+  alex: { fill: "#874f3c", narrow: "M251 303Q260 305 269 302Q260 309 251 303Z", open: "M253 302Q260 300 267 302Q268 309 260 309Q252 309 253 302Z" },
+  maya: { fill: "#875442", narrow: "M582 298Q590 299 597 297Q590 303 582 298Z", open: "M585 297Q590 295 595 297Q596 303 590 303Q584 303 585 297Z" },
+  sam: { fill: "#533d32", narrow: "M768 302Q777 304 785 301Q777 308 768 302Z", open: "M771 301Q777 299 783 301Q785 308 777 308Q770 308 771 301Z" },
+};
+const mouths = Object.entries(speakers).map(([id, speaker]) => {
+  const node = speaker.node.querySelector("[data-mouth]");
+  return { id, node, closed: node.getAttribute("d"), shape: "closed" };
+});
+// Uneven, brief speech beats include closed-mouth rests. All timing derives from
+// the shared playback clock: no additional animation loops, intervals or timers.
+const mouthBeats = [
+  { until: 150, shape: "narrow" }, { until: 320, shape: "open" },
+  { until: 430, shape: "closed" }, { until: 620, shape: "narrow" },
+  { until: 760, shape: "open" }, { until: 900, shape: "closed" },
+];
+function updateSpeakingMouths(line, elapsed) {
+  const beat = line ? (elapsed - line.start) % 900 : 0;
+
+const isSpeaking = line &&
+  (elapsed - line.start) < line.duration * 0.40;
+
+const speakingShape = isSpeaking && !reducedMotion.matches
+  ? mouthBeats.find(frame => beat < frame.until).shape
+  : "closed";
+  mouths.forEach(mouth => {
+    const shape = mouth.id === line?.speakerId ? speakingShape : "closed";
+    if (mouth.shape === shape) return; // Only touch the SVG when a shape changes.
+    mouth.node.setAttribute("d", shape === "closed" ? mouth.closed : mouthShapes[mouth.id][shape]);
+    mouth.node.setAttribute("fill", shape === "closed" ? "none" : mouthShapes[mouth.id].fill);
+    mouth.node.dataset.mouthShape = shape;
+    mouth.shape = shape;
+  });
+}
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 const captionPositionModes = ["automatic", "left", "below", "right"];
 const positionLabel = value => value.charAt(0).toUpperCase() + value.slice(1);
@@ -688,6 +724,7 @@ function renderConversation(elapsed) {
   updateSpeakerPositions(playback.elapsed);
   const line = playback.status === "idle" ? null : scriptedConversation.lines.find(turn =>
     playback.elapsed >= turn.start && playback.elapsed < turn.start + turn.duration);
+  updateSpeakingMouths(line, playback.elapsed);
   if (line) {
     captionDisplay.show(line, playback.elapsed);
     const label = `${speakers[line.speakerId].name} · Simulated speaker`;
@@ -700,7 +737,7 @@ function renderConversation(elapsed) {
   if (playbackTime.textContent !== time) playbackTime.textContent = time;
 }
 
-// A single elapsed-time clock drives captions AND movement, so pause freezes both.
+// A single elapsed-time clock drives captions, movement and mouths; pause freezes all.
 function tick(now) {
   if (playback.status !== "playing") return;
   renderConversation(playback.anchorElapsed + now - playback.startedAt);
@@ -794,6 +831,12 @@ showPositionFeedback(effectiveSettings().captionMode === "head-fixed" ? "Positio
 // Do not silently skip readable turns while the visitor is in another tab.
 document.addEventListener("visibilitychange", () => {
   if (document.hidden) pausePlayback();
+});
+// Apply an accessibility preference change even while playback is paused.
+reducedMotion.addEventListener("change", () => {
+  const line = playback.status === "idle" ? null : scriptedConversation.lines.find(turn =>
+    playback.elapsed >= turn.start && playback.elapsed < turn.start + turn.duration);
+  updateSpeakingMouths(line, playback.elapsed);
 });
 resetConversationSettings();
 renderConversation(0);
