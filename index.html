@@ -112,6 +112,13 @@
               <text id="caption-speaker" x="11" y="12" fill="#bdd6c9" font-size="9" letter-spacing=".5"></text>
               <text id="caption-text" x="11" y="27" fill="#fff" font-size="15" font-weight="500"></text>
             </g>
+            <!-- Neutral, lens-safe feedback replaces captions during prepared overlap.
+                 It sits below both left-lens faces, including Maya after moving. -->
+            <g id="speech-uncertainty" visibility="hidden" aria-hidden="true" pointer-events="none">
+              <rect x="198" y="330" width="248" height="44" rx="9" fill="#3c3020" fill-opacity=".96" stroke="#edc779" />
+              <text x="322" y="347" text-anchor="middle" fill="#ffe5ad" font-size="10.5" font-weight="600">Overlapping speech · Speaker uncertain</text>
+              <text x="322" y="363" text-anchor="middle" fill="#fff3dc" font-size="10">Simulated · words not displayed</text>
+            </g>
             <g id="settings-menu" clip-path="url(#right-lens-clip)" visibility="hidden" role="menu" aria-label="AR glasses settings" tabindex="-1"></g>
             <!-- Brief feedback in the clear strip above the faces, inside a lens. -->
             <g id="position-toast" visibility="hidden" aria-hidden="true" pointer-events="none">

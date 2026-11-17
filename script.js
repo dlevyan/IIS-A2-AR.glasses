@@ -28,8 +28,12 @@ lines: [
 
   // Maya moves beside Alex between 21.5 and 24.3 seconds.
 
-  { start: 24500, duration: 3000, speakerId: "alex", text: "Better? Which design do you prefer?" },
-  { start: 27500, duration: 3000, speakerId: "sam", text: "I still think the blue one works best." },
+  // duration includes caption reading time; speechDuration is actual simulated
+  // speaking/reveal time. Sam interrupts Alex for 1.3 seconds (26.2–27.5s).
+  { start: 24500, duration: 3000, speechDuration: 3000, speakerId: "alex", text: "I prefer blue because the layout feels clearer." },
+  { start: 26200, duration: 1300, speechDuration: 1300, speakerId: "sam", text: "Wait, what about green?" },
+  // A new clause after the overlap: never replay or attribute the omitted words.
+  { start: 27500, duration: 3000, speakerId: "sam", text: "Green has more room for sketches." },
   { start: 30500, duration: 3000, speakerId: "maya", text: "I agree! We could improve the layout." },
   { start: 33500, duration: 3000, speakerId: "alex", text: "I'll update it and send it tonight." },
   { start: 36500, duration: 3200, speakerId: "sam", text: "Great. Let's meet here again tomorrow!" },
@@ -40,6 +44,19 @@ lines: [
 ],
 };
 const conversationDuration = Math.max(...scriptedConversation.lines.map(line => line.start + line.duration));
+
+// Prepared timing only, not detected audio or estimated speaker confidence.
+// Existing turns retain their 40% speech/reveal time and remaining caption hold.
+const speakingDuration = line => line.speechDuration ?? line.duration * .40;
+function conversationState(elapsed) {
+  const visibleLines = scriptedConversation.lines.filter(line =>
+    elapsed >= line.start && elapsed < line.start + line.duration);
+  const speakingLines = visibleLines.filter(line => elapsed < line.start + speakingDuration(line));
+  return {
+    speakingLines,
+    captionLine: speakingLines.length === 1 ? speakingLines[0] : visibleLines.at(-1) ?? null,
+  };
+}
 
 // Positions come from the existing illustration, not individual dialogue lines.
 const speakerDefinitions = {
@@ -87,17 +104,12 @@ const mouthBeats = [
   { until: 430, shape: "closed" }, { until: 620, shape: "narrow" },
   { until: 760, shape: "open" }, { until: 900, shape: "closed" },
 ];
-function updateSpeakingMouths(line, elapsed) {
-  const beat = line ? (elapsed - line.start) % 900 : 0;
-
-const isSpeaking = line &&
-  (elapsed - line.start) < line.duration * 0.40;
-
-const speakingShape = isSpeaking && !reducedMotion.matches
-  ? mouthBeats.find(frame => beat < frame.until).shape
-  : "closed";
+function updateSpeakingMouths(speakingLines, elapsed) {
   mouths.forEach(mouth => {
-    const shape = mouth.id === line?.speakerId ? speakingShape : "closed";
+    const line = speakingLines.find(turn => turn.speakerId === mouth.id);
+    const beat = line ? (elapsed - line.start) % 900 : 0;
+    const shape = line && !reducedMotion.matches
+      ? mouthBeats.find(frame => beat < frame.until).shape : "closed";
     if (mouth.shape === shape) return; // Only touch the SVG when a shape changes.
     mouth.node.setAttribute("d", shape === "closed" ? mouth.closed : mouthShapes[mouth.id][shape]);
     mouth.node.setAttribute("fill", shape === "closed" ? "none" : mouthShapes[mouth.id].fill);
@@ -239,6 +251,7 @@ function bubbleOutline(box, face) {
 }
 
 const captionNode = document.getElementById("dynamic-caption");
+const uncertaintyNode = document.getElementById("speech-uncertainty");
 const captionText = document.getElementById("caption-text");
 const captionSpeaker = document.getElementById("caption-speaker");
 const captionBackground = document.getElementById("caption-background");
@@ -367,7 +380,7 @@ const captionDisplay = {
       this.wordCount = 0;
     }
     const words = line.text.split(/\s+/);
-    const progress = clamp((elapsed - line.start) / (line.duration * .40), 0, 1);
+    const progress = clamp((elapsed - line.start) / speakingDuration(line), 0, 1);
     const count = Math.min(words.length, 1 + Math.floor(progress * (words.length - 1)));
     if (count !== this.wordCount) {
       let remaining = count;
@@ -722,22 +735,31 @@ function renderConversation(elapsed) {
   configureCaptionAppearance();
   playback.elapsed = clamp(elapsed, 0, conversationDuration);
   updateSpeakerPositions(playback.elapsed);
-  const line = playback.status === "idle" ? null : scriptedConversation.lines.find(turn =>
-    playback.elapsed >= turn.start && playback.elapsed < turn.start + turn.duration);
-  updateSpeakingMouths(line, playback.elapsed);
-  if (line) {
+  const { speakingLines, captionLine: line } = playback.status === "idle"
+    ? { speakingLines: [], captionLine: null } : conversationState(playback.elapsed);
+  updateSpeakingMouths(speakingLines, playback.elapsed);
+  const overlapping = speakingLines.length > 1;
+  // One neutral indicator replaces both captions. No uncertain words or speaker
+  // names are displayed, and no playback state/timer is changed by uncertainty.
+  uncertaintyNode.setAttribute("visibility", overlapping && effectiveSettings().visibility === "on" ? "visible" : "hidden");
+  let label = "No active speaker";
+  if (overlapping) {
+    if (captionDisplay.currentLine) captionDisplay.clear();
+    label = "Overlapping speech · Speaker uncertain";
+    const message = label + ". Simulated overlap; words during overlap are not displayed.";
+    if (announcement.textContent !== message) announcement.textContent = message;
+  } else if (line) {
     captionDisplay.show(line, playback.elapsed);
-    const label = `${speakers[line.speakerId].name} · Simulated speaker`;
-    if (speakerStatus.textContent !== label) speakerStatus.textContent = label;
+    label = `${speakers[line.speakerId].name} · Simulated speaker`;
   } else {
     captionDisplay.clear();
-    speakerStatus.textContent = "No active speaker";
   }
+  if (speakerStatus.textContent !== label) speakerStatus.textContent = label;
   const time = `${formatTime(playback.elapsed)} / ${formatTime(conversationDuration)}`;
   if (playbackTime.textContent !== time) playbackTime.textContent = time;
 }
 
-// A single elapsed-time clock drives captions, movement and mouths; pause freezes all.
+// One clock drives captions, movement, mouths and overlap; pause freezes all.
 function tick(now) {
   if (playback.status !== "playing") return;
   renderConversation(playback.anchorElapsed + now - playback.startedAt);
@@ -834,9 +856,8 @@ document.addEventListener("visibilitychange", () => {
 });
 // Apply an accessibility preference change even while playback is paused.
 reducedMotion.addEventListener("change", () => {
-  const line = playback.status === "idle" ? null : scriptedConversation.lines.find(turn =>
-    playback.elapsed >= turn.start && playback.elapsed < turn.start + turn.duration);
-  updateSpeakingMouths(line, playback.elapsed);
+  const speakingLines = playback.status === "idle" ? [] : conversationState(playback.elapsed).speakingLines;
+  updateSpeakingMouths(speakingLines, playback.elapsed);
 });
 resetConversationSettings();
 renderConversation(0);
