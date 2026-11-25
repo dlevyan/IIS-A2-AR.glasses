@@ -7,6 +7,7 @@
   <title>AR Captioning Glasses · Scripted Conversation</title>
   <link rel="stylesheet" href="styles.css" />
   <script src="script.js" defer></script>
+  <script src="live.js" defer></script>
 </head>
 <body>
   <main class="page-shell">
@@ -17,14 +18,14 @@
       </a>
       <h1 class="sr-only">AR Captioning Glasses — Scripted conversation simulator</h1>
       <fieldset class="mode-selector">
-        <legend class="sr-only">Simulation mode preview</legend>
+        <legend class="sr-only">Input mode</legend>
         <label class="mode-option">
           <input type="radio" name="mode" value="scripted" checked />
           <span><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 3h14v10H8l-5 4zM6 7h8M6 10h5" /></svg>Scripted Conversation</span>
         </label>
-        <label class="mode-option mode-option--disabled">
-          <input type="radio" name="mode" value="microphone" disabled />
-          <span><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="7" y="2" width="6" height="10" rx="3" /><path d="M4 8v2a6 6 0 0 0 12 0V8M10 16v3M7 19h6" /></svg>Live Microphone <small>Coming soon</small></span>
+        <label class="mode-option">
+          <input type="radio" name="mode" value="microphone" />
+          <span><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="7" y="2" width="6" height="10" rx="3" /><path d="M4 8v2a6 6 0 0 0 12 0V8M10 16v3M7 19h6" /></svg>Live Microphone</span>
         </label>
       </fieldset>
     </header>
@@ -135,7 +136,7 @@
           <rect x="132" y="204" width="14" height="6" rx="3" fill="#777b80" /><rect x="857" y="202" width="13" height="6" rx="3" fill="#777b80" />
         </svg>
       </div>
-      <figcaption id="glasses-caption"><span class="preview-dot" aria-hidden="true"></span>Simulated conversation · Scripted speakers &amp; movement<span class="scroll-hint"> · Swipe or use arrow keys to explore</span></figcaption>
+      <figcaption id="glasses-caption"><span class="preview-dot" aria-hidden="true"></span><span id="scene-mode-description">Simulated conversation · Scripted speakers &amp; movement</span><span class="scroll-hint"> · Swipe or use arrow keys to explore</span></figcaption>
       <div class="playback-strip" role="group" aria-label="Scripted conversation playback">
         <button id="play-button" type="button">Play</button>
         <button id="pause-button" type="button" disabled>Pause</button>
@@ -146,6 +147,22 @@
         <span id="playback-state">Ready</span>
         <span id="playback-time" aria-label="Playback time">00:00 / 00:55</span>
         <span id="speaker-status" role="status">No active speaker</span>
+      </div>
+      <div id="live-controls" hidden>
+        <div class="playback-strip" role="group" aria-label="Live microphone controls">
+          <span id="live-speaker-label">Assign speech to</span>
+          <div class="live-speakers" role="group" aria-labelledby="live-speaker-label">
+            <button type="button" data-speaker="alex" aria-pressed="true">Alex</button>
+            <button type="button" data-speaker="maya" aria-pressed="false">Maya</button>
+            <button type="button" data-speaker="sam" aria-pressed="false">Sam</button>
+          </div>
+          <button id="listen-start" type="button" aria-describedby="live-privacy">Start Listening</button>
+          <button id="listen-stop" type="button" disabled>Stop Listening</button>
+          <button id="live-clear" type="button">Clear captions</button>
+          <button id="live-reset" type="button">Reset to Original</button>
+          <span id="live-status" role="status" aria-live="polite">Microphone off</span>
+        </div>
+        <p id="live-privacy" class="live-note">Manual speaker assignment · Automatic captions may be inaccurate. Your browser may send audio to its speech service. No audio or transcripts are saved by this website.</p>
       </div>
       <p id="caption-announcement" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p>
       <p id="position-status" class="sr-only" role="status" aria-live="polite" aria-atomic="true">Caption position: Automatic</p>
@@ -210,7 +227,7 @@
       </div>
       </div>
     </section>
-    <footer class="page-footer"><span>Intelligent Interactive Systems · Assignment 2</span><span>Original illustration · No microphone access</span></footer>
+    <footer class="page-footer"><span>Intelligent Interactive Systems · Assignment 2</span><span id="mode-privacy">Original illustration · No microphone access</span></footer>
   </main>
 </body>
 </html>

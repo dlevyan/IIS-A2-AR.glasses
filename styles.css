@@ -61,6 +61,17 @@ figcaption { display: flex; flex-wrap: wrap; justify-content: center; align-item
 #settings-menu:focus { outline: none; } /* The selected row provides visible focus. */
 .script-notice { margin: 4px 0; text-align: center; font-size: 11px; }
 
+/* Live-only additions; hidden controls take no space in the scripted layout. */
+[hidden] { display: none !important; }
+.live-speakers { display: inline-flex; gap: 3px; }
+.live-speakers button[aria-pressed="true"] { background: #285b45; border-color: #285b45; color: #fff; }
+.live-note { margin: 3px 0 0; text-align: center; font-size: 9px; line-height: 1.4; color: var(--muted); }
+#live-status { max-width: 340px; }
+.speaker-selection { display: none; pointer-events: none; }
+body[data-mode="microphone"] [data-live-speaker] { cursor: pointer; }
+body[data-mode="microphone"] [data-live-speaker][aria-pressed="true"] .speaker-selection,
+body[data-mode="microphone"] [data-live-speaker]:focus-visible .speaker-selection { display: inline; }
+
 /* Compact control strip: no cards, with short labels beside each control. */
 .controls-section { width: min(1120px, 100%); justify-self: center; padding-top: 10px; border-top: 1px solid var(--line); }
 .controls-layout { display: grid; grid-template-columns: 280px minmax(0, 1fr); align-items: center; gap: 20px; }

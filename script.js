@@ -1,4 +1,7 @@
 // Shared press feedback; physical control actions are connected below.
+// The live input adapter is loaded afterwards; all settings use this one router.
+let inputMode = "scripted";
+let liveInput = null;
 const pressTimers = new WeakMap();
 
 document.querySelectorAll("[data-control]").forEach((button) => {
@@ -231,7 +234,18 @@ function calculateCaptionPlacement(speakerId) {
     { x: xAligned, y: face.y - height - 12, position: "above" },
     { x: xAligned, y: lens.y + lens.height - height, position: "below" },
   ].map(box => ({ ...box, width, height }));
-  const safe = candidates.filter(box => safeCaptionBox(box, face, lens));
+  const safe = candidates.filter(box => safeCaptionBox(box, face, lens)
+    && (inputMode !== "microphone" || !menu.open
+      || (!intersects(box, MENU_BOUNDS) && !intersects(bubbleTail(box, face), MENU_BOUNDS))));
+  // Live text keeps arriving while Settings is open. If that lens is occupied,
+  // use the same safe fixed-view geometry temporarily, with an explicit notice.
+  // Scripted placement/behaviour is deliberately unchanged.
+  if (!safe.length && inputMode === "microphone" && menu.open) {
+    const left = lensBounds.left;
+    const fallback = { x: left.x + (left.width - width) / 2, y: left.y + left.height - height,
+      width, height, position: "below", headFixed: true, menuFallback: true };
+    return safeCaptionBox(fallback, bubbleFace(fallback, speakerId), left) ? fallback : null;
+  }
   if (captionPosition.mode === "automatic") return safe[0] ?? null;
   const preferred = safe.find(box => box.position === captionPosition.mode);
   if (preferred) return preferred;
@@ -308,12 +322,15 @@ function showPositionFeedback(detail = "") {
 }
 function reportPositionFallback(speakerId, box) {
   const mode = effectiveSettings().captionMode;
-  const fallback = !box || (mode === "speaker-registered" && captionPosition.mode !== "automatic" && box.position !== captionPosition.mode);
+  const fallback = box?.menuFallback || !box || (mode === "speaker-registered" && captionPosition.mode !== "automatic" && box.position !== captionPosition.mode);
   if (!fallback) { positionFeedback.lastFallbackKey = null; return; }
   const key = captionPosition.mode + ":" + speakerId + ":" + (box?.position ?? "hidden") + ":" + menu.open;
   if (key === positionFeedback.lastFallbackKey) return;
   positionFeedback.lastFallbackKey = key;
-  showPositionFeedback(box ? "Repositioned " + box.position + " for visibility" : menu.open ? "Paused: close Settings to read" : "Paused: no safe caption space");
+  showPositionFeedback(box?.menuFallback ? "Caption moved to left lens while Settings is open"
+    : box ? "Repositioned " + box.position + " for visibility"
+    : inputMode === "microphone" ? "No safe caption space. Close Settings to read."
+    : menu.open ? "Paused: close Settings to read" : "Paused: no safe caption space");
 }
 function configureCaptionAppearance() {
   const settings = effectiveSettings();
@@ -352,7 +369,22 @@ function wrapCaption(text) {
   const maxWidth = captionStyle.width - captionStyle.padding * 2;
   const lines = [];
   let line = "";
-  for (const word of text.split(/\s+/)) {
+  // Browser transcripts can contain an unbroken URL/word. Split only oversized
+  // tokens, leaving existing scripted wrapping unchanged.
+  const tokens = text.split(/\s+/).flatMap(word => {
+    if (measureContext.measureText(word).width <= maxWidth) return [word];
+    const chunks = [];
+    let chunk = "";
+    for (const character of word) {
+      if (chunk && measureContext.measureText(chunk + character).width > maxWidth) {
+        chunks.push(chunk); chunk = "";
+      }
+      chunk += character;
+    }
+    if (chunk) chunks.push(chunk);
+    return chunks;
+  });
+  for (const word of tokens) {
     const next = line ? line + " " + word : word;
     if (line && measureContext.measureText(next).width > maxWidth) { lines.push(line); line = word; }
     else line = next;
@@ -365,6 +397,7 @@ const captionDisplay = {
   currentLine: null, wordCount: 0, rows: [], layoutKey: "", lastBox: null,
   show(line, elapsed) {
     if (effectiveSettings().visibility === "off") { this.clear(); return; }
+    const isLive = line.source === "microphone";
     const layoutKey = captionStyle.fontSize + ":" + captionStyle.width;
     if (this.currentLine !== line || this.layoutKey !== layoutKey) {
       captionText.replaceChildren();
@@ -374,13 +407,13 @@ const captionDisplay = {
         captionText.append(span);
         return { span, words: text.split(/\s+/) };
       });
-      captionSpeaker.textContent = speakers[line.speakerId].name.toUpperCase() + " · SIMULATED";
+      captionSpeaker.textContent = speakers[line.speakerId].name.toUpperCase() + (isLive ? " · MANUAL" : "");
       this.currentLine = line;
       this.layoutKey = layoutKey;
       this.wordCount = 0;
     }
-    const words = line.text.split(/\s+/);
-    const progress = clamp((elapsed - line.start) / speakingDuration(line), 0, 1);
+    const words = isLive ? this.rows.flatMap(row => row.words) : line.text.split(/\s+/);
+    const progress = isLive ? 1 : clamp((elapsed - line.start) / speakingDuration(line), 0, 1);
     const count = Math.min(words.length, 1 + Math.floor(progress * (words.length - 1)));
     if (count !== this.wordCount) {
       let remaining = count;
@@ -395,7 +428,7 @@ const captionDisplay = {
         row.span.textContent = latest[index] || "";
         row.span.setAttribute("y", captionStyle.baseline + index * captionStyle.lineHeight);
       });
-      announcement.textContent = speakers[line.speakerId].name + ", simulated speaker: " + words.slice(0, count).join(" ");
+      announcement.textContent = speakers[line.speakerId].name + (isLive ? ", manually assigned speaker. Automatic caption: " : ", simulated speaker: ") + words.slice(0, count).join(" ");
       this.wordCount = count;
     }
     const box = calculateCaptionPlacement(line.speakerId);
@@ -733,6 +766,7 @@ function updateSpeakerPositions(elapsed) {
 
 function renderConversation(elapsed) {
   configureCaptionAppearance();
+  if (inputMode === "microphone") { liveInput?.render(); return; }
   playback.elapsed = clamp(elapsed, 0, conversationDuration);
   updateSpeakerPositions(playback.elapsed);
   const { speakingLines, captionLine: line } = playback.status === "idle"
@@ -761,7 +795,7 @@ function renderConversation(elapsed) {
 
 // One clock drives captions, movement, mouths and overlap; pause freezes all.
 function tick(now) {
-  if (playback.status !== "playing") return;
+  if (inputMode !== "scripted" || playback.status !== "playing") return;
   renderConversation(playback.anchorElapsed + now - playback.startedAt);
   if (playback.elapsed >= conversationDuration) {
     playback.status = "ended";
@@ -773,6 +807,7 @@ function tick(now) {
 }
 
 function startPlayback(restart = false) {
+  if (inputMode !== "scripted") return;
   cancelAnimationFrame(playback.frameId);
   if (restart || playback.status === "ended") {
   playback.elapsed = 0;
@@ -786,6 +821,7 @@ function startPlayback(restart = false) {
   playback.frameId = requestAnimationFrame(tick);
 }
 function resetToOriginal() {
+  liveInput?.reset();
   // Stop playback.
   cancelAnimationFrame(playback.frameId);
   playback.frameId = null;
@@ -852,10 +888,14 @@ showPositionFeedback(effectiveSettings().captionMode === "head-fixed" ? "Positio
 
 // Do not silently skip readable turns while the visitor is in another tab.
 document.addEventListener("visibilitychange", () => {
-  if (document.hidden) pausePlayback();
+  if (document.hidden) {
+    if (inputMode === "microphone") liveInput?.stop();
+    else pausePlayback();
+  }
 });
 // Apply an accessibility preference change even while playback is paused.
 reducedMotion.addEventListener("change", () => {
+  if (inputMode === "microphone") { liveInput?.render(); return; }
   const speakingLines = playback.status === "idle" ? [] : conversationState(playback.elapsed).speakingLines;
   updateSpeakingMouths(speakingLines, playback.elapsed);
 });
