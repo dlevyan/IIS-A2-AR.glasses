@@ -41,7 +41,7 @@ See the repository commit history for development evidence. Real-world DHH usabi
 
 ## AI assistance
 
-I used **OpenAI Codex** to help build, test and debug the prototype. I used **ChatGPT** to refine report wording and help structure the architecture diagram; I checked the descriptions against the prototype. I created the storyboards from prototype screenshots and arranged them in Canva myself.
+I used **OpenAI Codex** to help build, test and debug the prototype. I used **ChatGPT** to refine report wording and help structure the architecture diagram; I checked the descriptions against the prototype. Any output from AI has been checked by me. I created the storyboards from prototype screenshots and arranged them in Canva myself.
 
 ## Supporting material
 
